@@ -16,6 +16,22 @@ class Data(db.Model):
     date = db.DateTimeProperty()
     line = db.TextProperty()
 
+
+green1 = "ccffcc"
+green2 = "76d08e"
+green3 = "339966"
+green = green3
+yellow = "FFFF00"
+orange = "ff9900"
+red = "e80000"
+colors  = (range(0,20), green1, "sehr gut") , 	(range(21,35), green2, "gut"), (range(36,50), green3, "befriedigend") ,(range(51,100), yellow, "unbefriedigend"), (range(101,150), orange, "schlecht"), (range(150,300), red, "sehr schlecht") 
+
+def valueToColor(colorValue):
+	for color in colors:
+		if (colorValue in color[0]):
+			return color
+
+
 class MainPage(webapp.RequestHandler):
     def get(self):
 		self.response.out.write('<html><body>')
@@ -97,8 +113,6 @@ class LastValue(webapp.RequestHandler):
 	def get(self):
 		today = datetime.datetime.now();
 		q = db.GqlQuery("SELECT * FROM Data ORDER BY date DESC LIMIT 1")
-		green = '00FF00'
-		red = 'FF0000'
 		result = q.get()
 		if (result.value > 50):
 			color = red
@@ -119,8 +133,6 @@ class LastValues(webapp.RequestHandler):
 		count = int(self.request.get("count", "1"))
 		today = datetime.datetime.now();
 		q = db.GqlQuery("SELECT * FROM Data ORDER BY date DESC LIMIT " + str(count))
-		green = '00FF00'
-		red = 'FF0000'
 		results = q.fetch(count)
 		head = '<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'
 
@@ -129,10 +141,8 @@ class LastValues(webapp.RequestHandler):
 		body3 = '</tr></table></body>'
 		rows1 = rows2 = ""
 		for  result in results:
-			if (result.value > 50):
-				color = red
-			else:
-				color = green
+			colorTuple = valueToColor(result.value);
+			color = colorTuple[1]
 			rows1 = '<td style="text-align:center;vertical-align:center;">' + result.date.strftime("%d.%m.%Y") + '</td>' + rows1
 			rows2 = '<td style="background-color:#' + color + ';width:75px;text-align:center;vertical-align:center;padding:5px;">' + str(result.value) + ' µg/m³</td>' + rows2
 
