@@ -92,10 +92,32 @@ class Parser(webapp.RequestHandler):
 	        yield start_date + timedelta(n)
 
 
+class LastValue(webapp.RequestHandler):
+	def get(self):
+		today = datetime.datetime.now();
+		q = db.GqlQuery("SELECT * FROM Data ORDER BY date DESC LIMIT 1")
+		green = '00FF00'
+		red = 'FF0000'
+		result = q.get()
+		if (result.value > 50):
+			color = red
+		else:
+			color = green
+
+		head = '<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'
+		body1 = '<body><table style="border-style:solid;border-width:1px;position:relative;overflow: hidden;font-family:Helvetica, sans-serif;font-size:small;width:250px;"><tr style="border-style: none;"><td style="float:left;padding:10px;">Feinstaubbelastung Taborstraße ' 
+		body2 = '</td><td style="background-color:#'
+		body3 = ';width:100px;text-align:left;vertical-align:center;padding:20px;">'
+		body4 = ' µg/m³</td></tr></table></body>'
+
+		site = head + body1 + result.date.strftime("%d.%m.%Y") + body2 + color + body3 + str(result.value) + body4
+		self.response.out.write(site)
+
+
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
 									  ("/parse", Parser),									  	
-                                      ('/sign', Guestbook)],
+                                      ('/last', LastValue)],
                                      debug=True)
 
 def main():
