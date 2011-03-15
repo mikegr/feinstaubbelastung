@@ -1,3 +1,4 @@
+# coding=utf-8
 import cgi
 import logging
 import datetime
@@ -22,7 +23,7 @@ class MainPage(webapp.RequestHandler):
 		counter = 0
 		below = ""
 		above = ""
-		width = "800";
+		width = "1000"
 		for data in dates:
 			last_date = data.date
 			if (data.value > 50):	
@@ -36,16 +37,13 @@ class MainPage(webapp.RequestHandler):
 		title = "Taborstraße - Überschreitungen der Feinstaubbelastung seit Jahresbeginn:  " + str(counter)
 		last_date_str = last_date.strftime("%d.%m.%Y")
 		labels = "&chxt=x&chxr=0," + all + "&chxp=0," + all + "&chxl=0:|1.1|" +  last_date_str  + "&chm=N,000000,-1,,10&chdlp=t"
-
-		self.response.out.write('Werte:')
+		"""self.response.out.write('Werte:')
         	for data in dates:
         	    self.response.out.write(cgi.escape(str(data.date)) + ":" + cgi.escape(str(data.value)))
-		self.response.out.write('Werte-ENDE:')
-
+		self.response.out.write('Werte-ENDE:')"""
 		chartUrl = "http://chart.apis.google.com/chart?chtt="  + title + "&chdl=Nicht+überschritten|Überschritten&cht=bvs&chs="+ width + "x220&chco=FFBAB1,FF0000&chbh=a,1&chds=0,130"
-		
 		link = chartUrl + labels + "&chd=t:" + below[:-1] + "|" + above[:-1]
-		self.response.out.write('<iframe src="' + link + '" width="800" height="250"/>')
+		self.response.out.write('<iframe src="' + link + '" width="1000" height="250"/>')
 		
 
 
