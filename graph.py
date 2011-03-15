@@ -45,6 +45,7 @@ class MainPage(webapp.RequestHandler):
 		link = chartUrl + labels + "&chd=t:" + below[:-1] + "|" + above[:-1]
 		self.response.out.write('<iframe src="' + link + '" width="1000" height="250"/>')
 		
+	
 
 
 class Guestbook(webapp.RequestHandler):
@@ -113,11 +114,38 @@ class LastValue(webapp.RequestHandler):
 		site = head + body1 + result.date.strftime("%d.%m.%Y") + body2 + color + body3 + str(result.value) + body4
 		self.response.out.write(site)
 
+class LastValues(webapp.RequestHandler):
+	def get(self):
+		count = int(self.request.get("count", "1"))
+		today = datetime.datetime.now();
+		q = db.GqlQuery("SELECT * FROM Data ORDER BY date DESC LIMIT " + str(count))
+		green = '00FF00'
+		red = 'FF0000'
+		results = q.fetch(count)
+		head = '<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head>'
+
+		body1 = '<body><table style="border-style:solid;border-width:1px;position:relative;overflow: hidden;font-family:Helvetica, sans-serif;font-size:small;"><tr style="border-style: none;"><td colspan="' + str(count)  + '" style="text-align:center;padding:5px;background-color:#EEEEEE">Feinstaubbelastung Taborstraße </td><tr>'
+		body2 = '</tr><tr>'
+		body3 = '</tr></table></body>'
+		rows1 = rows2 = ""
+		for  result in results:
+			if (result.value > 50):
+				color = red
+			else:
+				color = green
+			rows1 = '<td style="text-align:center;vertical-align:center;">' + result.date.strftime("%d.%m.%Y") + '</td>' + rows1
+			rows2 = '<td style="background-color:#' + color + ';width:75px;text-align:center;vertical-align:center;padding:5px;">' + str(result.value) + ' µg/m³</td>' + rows2
+
+		site = head + body1 + rows1 + body2 + rows2 + body3
+		self.response.out.write(site)
+
+
 
 application = webapp.WSGIApplication(
                                      [('/', MainPage),
 									  ("/parse", Parser),									  	
-                                      ('/last', LastValue)],
+                                      ('/last1', LastValue),
+									  ('/last', LastValues)],
                                      debug=True)
 
 def main():
