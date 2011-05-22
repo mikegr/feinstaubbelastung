@@ -1,5 +1,9 @@
 application: feinstaubbelastung
+<<<<<<< HEAD
+version: 4
+=======
 version: 5
+>>>>>>> 18cd3c79b6a1632610e5d832e04f2b37e769a0c1
 runtime: python
 api_version: 1
 
