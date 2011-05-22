@@ -50,7 +50,7 @@ class MainPage(webapp.RequestHandler):
 
         date_fmt = "%d.%m.%Y"
 
-        labels = "&chxt=x&chxr=0," + all + "&chxp=0," + all + "&chxl=0:|"+ fromDate.strftime(date_fmt) +"|" +  toDate.strftime(date_fmt)   + "&chm=N,000000,-1,,10&chdlp=t"
+        labels = "&chxt=x&chxr=0," + all + "&chxp=0," + all + "&chxl=0:|"+ fromDate.strftime(date_fmt) +"|" +  last_date.strftime(date_fmt)   + "&chm=N,000000,-1,,10&chdlp=t"
         """self.response.out.write('Werte:')
             for data in dates:
                 self.response.out.write(cgi.escape(str(data.date)) + ":" + cgi.escape(str(data.value)))
