@@ -71,7 +71,7 @@ class Guestbook(webapp.RequestHandler):
 
 class Parser(webapp.RequestHandler):
     def get(self):
-        urlPart1 = "http://www.wien.gv.at/ma22-lgb/tb/"
+        urlPart1 = "https://www.wien.gv.at/ma22-lgb/tb/"
         out = self.response.out
         first = datetime.datetime(2011, 1, 1)
         today = datetime.datetime.now();
@@ -85,13 +85,18 @@ class Parser(webapp.RequestHandler):
             else:
                 filename = self.format_date(single_date)        
                 url = urlPart1 + filename;
+                logging.info("URL: " + url)
                 url_handle = urllib2.urlopen(url);
                 for line in url_handle:
                     if (line.startswith("Taborstra&szlig;e")):
                         data = Data()
+                        logging.debug("Line: " + line)                        
                         data.line = line
                         data.date = single_date
-                        data.value = int(line.split("|")[4].replace("*", "").strip())
+                        try:
+                            data.value = int(line.split("|")[4].replace("*", "").strip())
+                        except ValueError:
+                            data.value = int("0")    
                         data.put();
                         out.write("Storing: " + str(data.date) + ":" +  str(data.value) + "<br/>")    
  
