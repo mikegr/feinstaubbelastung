@@ -22,6 +22,8 @@ class MainPage(webapp.RequestHandler):
         self.writeCount()
         self.write(datetime.datetime(2011, 1, 1), datetime.datetime(2011, 3, 31))
         self.write(datetime.datetime(2011, 4, 1), datetime.datetime(2011, 6, 30))
+        self.write(datetime.datetime(2011, 7, 1), datetime.datetime(2011, 9, 30))
+        self.write(datetime.datetime(2011, 10, 1), datetime.datetime(2011, 12, 31))
         self.response.out.write('</body></html>')
     
     def writeCount(self):
